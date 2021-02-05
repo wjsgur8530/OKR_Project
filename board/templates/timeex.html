@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block content %}
+<html>
+<head>
+    <div>
+        <img src="https://cdn.pixabay.com/photo/2014/04/03/00/41/house-309113_1280.png" onClick="location.href={% url 'boardapp:test2'%}" style="width:50px; height:50px; cursor:pointer; margin-left:3%;">
+        <form method="get" action="" class="form" style="margin-left:2%; margin-top:10px;">
+            <select name="month" id="id_month">
+                <option value="0" selected>월 선택</option>
+                <option value="01">1월</option>
+                <option value="02">2월</option>
+                <option value="03">3월</option>
+                <option value="04">4월</option>
+                <option value="05">5월</option>
+                <option value="06">6월</option>
+                <option value="07">7월</option>
+                <option value="08">8월</option>
+                <option value="09">9월</option>
+                <option value="10">10월</option>
+                <option value="11">11월</option>
+                <option value="12">12월</option>
+            </select>
+        </form>
+        <h1 style="color:gray; margin-left:130px; margin-top:-70px; font-family: 'Jua', sans-serif; font-size:3.5em; font-size:3.5em;">{{department_text}}team</h1>
+        <div>
+            <form method="get" class="forms">
+                <button type="button" class="btn btn-outline-primary" style="font-family: 'Jua', sans-serif; font-size:2rem; margin-top:-120px; margin-left:470px;" name="department" value="개발" onClick="location.href='/timeline/?month={{ month_text }}&department=개발'">개발팀</button>
+                <button type="button" class="btn btn-outline-warning" style="font-family: 'Jua', sans-serif; font-size:2rem; margin-top:-120px;" name="department" value="경영/기획" onClick="location.href='/timeline/?month={{ month_text }}&department=경영/기획'">경영/기획팀</button>
+                <button type="button" class="btn btn-outline-success" style="font-family: 'Jua', sans-serif; font-size:2rem; margin-top:-120px;" name="department" value="영업" onClick="location.href='/timeline/?month={{ month_text }}&department=영업'">영업팀</button>
+            </form>
+        </div>
+
+        <img onclick="info_btn()" src="https://cdn.pixabay.com/photo/2017/06/13/12/54/furthermore-2398784_960_720.png" style="width:30px; height:30px; cursor:pointer; margin-top:-100px; margin-left:900px;">
+        <div id="info" style="display:none; margin-left:20px;">
+            <div style="font-family: 'Jua', sans-serif; color:#606060; display:flex; box-sizing:border-box; max-width:30%;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2">회사목표</th>
+                        </tr>
+                    </thead>
+                {% for company in company_list %}
+                    <tbody>
+                        <tr>
+                            <td>{{company.title}}</td>
+                            <td>{{company.context}}</td>
+                            <br>
+                        </tr>
+                    </tbody>
+                {% endfor %}
+                </table>
+            </div>
+            <div style="font-family: 'Jua', sans-serif; color:#606060; display:flex; box-sizing:border-box; max-width:30%;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2">팀목표</th>
+                        </tr>
+                    </thead>
+                {% for departmentgoal in department_list %}
+                    <tbody>
+                        <tr>
+                            <td>{{departmentgoal.title}}</td>
+                            <td>{{departmentgoal.context}}</td>
+                            <br>
+                        </tr>
+                    </tbody>
+                {% endfor %}
+                </table>
+            </div>
+            <div style="font-family: 'Jua', sans-serif; color:#606060; display:flex; box-sizing:border-box; max-width:30%;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="4">개인목표</th>
+                        </tr>
+                    </thead>
+                    {% for personalgoal in personalgoal_list %}
+                    <tbody>
+                        <tr>
+                            <td>{{personalgoal.person}}</td>
+                            <td>{{personalgoal.title}}</td>
+                            <td>{{personalgoal.context}}</td>
+                            <td>{{personalgoal.departmentgoal}}</td>
+                            <br>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+            </div>
+            <div style="font-family: 'Jua', sans-serif; color:#606060; display:flex; box-sizing:border-box; max-width:10%;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2">분류</th>
+                        </tr>
+                    </thead>
+                    {% for classification in classification_list %}
+                    <tbody>
+                        <tr>
+                            <td>{{classification.num}}</td>
+                            <td>{{classification.title}}</td>
+                            <br>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+    <h2 style="font-family: 'Nanum Gothic', sans-serif; font-size:1.5em; border-left: 5px solid #1f3a93; margin-left:1%; margin-top:-40px;">&nbsp;&nbsp;{{ month_text }}월 OKR </h2>
+    <div>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+    google.charts.load('current', {'packages':['gantt']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = new google.visualization.DataTable();
+      var arr = {{values|safe}};
+      data.addColumn('string', 'Task ID');
+      data.addColumn('string', 'Task Name');
+      data.addColumn('string', 'name');
+      data.addColumn('date', 'Start Date');
+      data.addColumn('date', 'End Date');
+      data.addColumn('number', 'Duration');
+      data.addColumn('number', 'Percent Complete');
+      data.addColumn('string', 'Dependencies');
+      var array = new Array();
+      for(var i=0; i < arr.length; i++){
+        array[i] = [arr[i][0] , arr[i][1] , arr[i][2], new Date(arr[i][3]),new Date(arr[i][4]), null, arr[i][6], null]
+      }
+      console.log(array);
+      data.addRows(array);
+      console.log(array);
+      var options = {
+        height: arr.length*40,
+        gantt: {
+          trackHeight: 30.23
+        }
+      };
+      var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }
+  </script>
+    </div>
+</head>
+<body>
+
+
+
+<div class="graph" style="display:flex;">
+<!--    첫번째-->
+    <div>
+        <table id="left" style="text-align:center;">
+            <thead>
+            <th style="width:60px; height:20px; border-bottom: 1px solid; border-color:#E0E0E0; background-color:#fec5bb">분류</th>
+            <th style="width:400px; height:20px; border-bottom: 1px solid; border-color:#E0E0E0; background-color:#fcd5ce;">테스크</th>
+            <th style="width:55px; height:30px; border-bottom: 1px solid; border-color:#E8E8E8; background-color:#fae1dd;">예상</th>
+            </thead>
+            <tbody>
+            {% for board in board_list %}
+            <tr height="30">
+                <td style="width:50px; border-bottom: 1.4px solid; border-style:thin; border-color:#E0E0E0; font-size:1.0em;">{{board.num}}</td>
+                <td style="width:280px; border-bottom: 1.4px solid; border-style:thin; border-color:#E0E0E0; font-size:1.0em;">{{board.task}}</td>
+                <td style="width:50px; border-bottom: 1.4px solid; border-style:thin; border-color:#E0E0E0; font-size:1.0em;">{{board.expect}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <table>
+            <thead>
+               <th style="width:1000px; margin-left:200px; margin-top:2px; background-color:#f8edeb; height:30px; text-align:center;">세부테스크 및 시작/끝일정</th>
+            </thead>
+        </table>
+        <div id="chart_div" style="margin-top:-0px;height:20%; width:100%;"></div>
+    </div>
+    <div>
+        <table id="right" style="text-align:center;">
+            <thead>
+            <th style="width:70px; height:20px; border-bottom: 1.5px solid; border-color:#E0E0E0; background-color:#e8e8e4;">시간</th>
+            <th style="width:300px; height:30px; border-bottom: 1px solid; border-color:#E8E8E8; background-color:#d8e2dc;">진행문제점</th>
+            <th style="width:200px; height:20px; border-bottom: 1.5px solid; border-color:#E0E0E0; background-color:#ffe5d9;">해결방안</th>
+            <th style="width:140px; height:20px; border-bottom: 1.5px solid; border-color:#E0E0E0; background-color:#ffd7ba;">팀</th>
+            <th style="width:80px; height:20px; border-bottom: 1px solid; border-color:#E0E0E0; background-color:#fec89a;">Lv</th>
+            </thead>
+            <tbody>
+            {% for board in board_list %}
+            <tr height="30">
+                <td style="width:50px; border-bottom: 1.4px solid; border-style:thin; border-color:#E0E0E0; font-size:1.0em;">{{board.time}}</td>
+                <td style="width:300px; border-bottom: 1.4px solid; border-style:thin; border-color:#E0E0E0; font-size:1.0em;">{{board.problem}}</td>
+                <td style="width:200px; border-bottom: 1.4px solid; border-style:thin; border-color:#E0E0E0; font-size:1.0em;">{{board.solution}}</td>
+                <td style="width:110px; border-bottom: 1.4px solid; border-style:thin; border-color:#E0E0E0; font-size:1.0em;">{{board.team}}</td>
+                <td style="width:80px; border-bottom: 1.4px solid; border-style:thin; border-color:#E0E0E0; font-size:1.0em;">{{board.level}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!--    세번째-->
+</div>
+</body>
+</html>
+<script>
+  function info_btn(){
+      if($('#info').css('display') == 'none'){
+      $('#info').show();
+      document.getElementById('info').style.display = 'flex';
+      document.getElementById('h2').style.marginTop = '-30px';
+      document.getElementByClassName('graph').style.marginTop = '-30px';
+    }else{
+      $('#info').hide();
+      document.getElementById('h2').style.marginTop = '';
+      document.getElementByClassName('graph').style.marginTop = '';
+    }
+    }
+</script>
+<script>
+    $(document).ready(function() {
+        $( "select[name=month]" ).val( "{{ month_text }}" );
+        $('select[name=month]').change(function () {
+            console.log($('select[name=month]').val());
+            month = $('select[name=month]').val();
+            $('.form').submit();
+        });
+    });
+    $(document).ready(function() {
+        $('button[name=department]').change(function () {
+            console.log($('button[name=department]').val());
+            department = $('button[name=department]').val();
+            $('.forms').attr('action', "/test4/?month={{month_text}}").submit();
+        });
+    });
+</script>
+<script>
+    $(document).ready(function(){
+  $('.large').click(function(){
+    document.getElementById('chart_div').style.display = 'block';
+    document.getElementById('table').style.marginLeft = '-570px';
+    document.getElementById('th').style.width = '600px';
+    });
+  $('.small').click(function(){
+    document.getElementById('chart_div').style.display = 'none';
+    document.getElementById('th').style.width = '';
+    document.getElementById('table').style.marginLeft = '-333px';
+    document.getElementById('th').style.width = '60px';
+    });
+});
+</script>
+{% endblock %}

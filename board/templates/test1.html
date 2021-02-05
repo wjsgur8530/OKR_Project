@@ -1,0 +1,483 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block content %}
+<div class="w3-teal">
+    <div class="w3-container">
+        <div class="sidebar" id="mySidebar">
+            <img src="https://cdn.pixabay.com/photo/2013/07/12/12/40/abort-146096_960_720.png" onclick="w3_close();" style="width:20px; margin-left:90%; height:20px; cursor:pointer;" class="close">
+            <form method="get" action="" class="form" style="margin-left: 7%; margin-top: 5%;">
+                <select name="month" id="id_month">
+                    <option value="0" selected>월 선택</option>
+                    <option value="01">1월</option>
+                    <option value="02">2월</option>
+                    <option value="03">3월</option>
+                    <option value="04">4월</option>
+                    <option value="05">5월</option>
+                    <option value="06">6월</option>
+                    <option value="07">7월</option>
+                    <option value="08">8월</option>
+                    <option value="09">9월</option>
+                    <option value="10">10월</option>
+                    <option value="11">11월</option>
+                    <option value="12">12월</option>
+                </select>
+            </form>
+            <h1 style="color:red; margin-left:5%; margin-top:-2%; font-family: 'Balsamiq Sans', cursive;">SEOUL<span style="color:white">SOFT</span> OKR</h1>
+            <div>
+                <button type="button" class="btn btn-outline-primary btn-sm" style="font-size:1.5rem" onClick="location.href='/test4/?month={{ month_text }}&department=개발'" value="개발" name="department">개발팀</button>
+                <button type="button" class="btn btn-outline-warning btn-sm" style="font-size:1.5rem" name="department" value="경영/기획" onClick="location.href='/test4/?month={{ month_text }}&department=경영/기획'">경영/기획팀</button>
+                <button type="button" class="btn btn-outline-success btn-sm" style="font-size:1.5rem" name="department" value="영업" onClick="location.href='/test4/?month={{ month_text }}&department=영업'">영업팀</button>
+            </div>
+            <br>
+
+
+
+
+            <!--회사 목표 -->
+            <div class="sidebar_company">
+                <table class="company">
+                </table>
+                <!--   side 시작   -->
+                <div class="container">
+                    <div class="content_box" style="text-align: center;">
+                        <table class="company" style="text-align: center; width:90%">
+                            <h4 style="color:#f5e663; margin-top:-2%;">회사 목표&nbsp;<img src="https://cdn.pixabay.com/photo/2017/01/10/23/01/icon-1970474_960_720.png" style="width:20px; height:20px; cursor:pointer; margin-top:-2%;" onclick="company_btn()"></h4>
+                            <thead>
+                            <tr>
+                                <th style="width:80px;">제목</th>
+                                <th style="width:300px;">내용</th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-dark">
+                            {% for company in company_list %}
+                            <tr>
+                                <td>{{company.title}}</td>
+                                <td>{{company.context}}</td>
+                                <td><img src="https://cdn.pixabay.com/photo/2013/07/12/12/40/abort-146096_960_720.png" onclick="location.href='/delete/{{ company.pk }}/'" style="width:20px; height:20px; margin-left:-10px; cursor:pointer;"></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="company" style="display:none;">
+                        <form method="post" style="max-width: 1500px; margin: 2rem auto;">
+                            {% csrf_token %}
+                            <table class="post">
+                                <tbody class="text-dark">
+                                <tr>
+                                    <td style="display: flex">{% bootstrap_form companyForm %}</td>
+                                    <td><input type="submit" class="btn btn-primary rounded-pill mt-3" value="POST" name="attr_name2"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+            <!--team 목표-->
+            <div class="sidebar_team">
+                <table class="team">
+                    <thead>
+                    <tr>
+                        <form method="get" action="" class="formss" >
+                        <h4 style="text-align:center; color:#ffcad4; margin-top:2%;">{{department_text}}팀 목표&nbsp;<img src="https://cdn.pixabay.com/photo/2017/01/10/23/01/icon-1970474_960_720.png" style="width:20px; height:20px; cursor:pointer; margin-top:-2%;;" onclick="team_btn()"></h4>
+                        </form>
+                    </tr>
+                    </thead>
+                </table>
+                <div class="container">
+                    <div class="content_box" style="text-align: center;margin-top:-5%;">
+                        <table class="team" style="text-align: center; width:90%">
+                            <thead class="thead-light">
+                            <tr>
+                                <th style="width:80px;">제목</th>
+                                <th>내용</th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-dark">
+                            {% for departmentgoal in department_list %}
+                            <tr>
+                                <td>{{departmentgoal.title}}</td>
+                                <td>{{departmentgoal.context}}</td>
+                                <td><img src="https://cdn.pixabay.com/photo/2013/07/12/12/40/abort-146096_960_720.png" onclick="location.href='/delete/department/{{ departmentgoal.pk }}/'" style="width:20px; height:20px; margin-left:-10px; cursor:pointer;"></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="team" style="display:none;">
+                        <form method="post" style="max-width: 1500px; margin: 2rem auto;">
+                            {% csrf_token %}
+                            <table class="post" >
+                                <tbody class="text-dark">
+                                <tr>
+                                    <td style="display: flex">{% bootstrap_form departmentForm %}</td>
+                                    <td><input type="submit" class="btn btn-primary rounded-pill mt-3" value="POST" name="attr_name4"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!--개별 목표-->
+            <div class="sidebar_people">
+                <table class="people" style="text-align: center; width:90%">
+                    <thead class="thead-light">
+                    <form method="get" action="" class="formsss" ></form>
+                    <h4 style="text-align:center; color:#DEE2FF; margin-top:2%;">개별 목표&nbsp;<img src="https://cdn.pixabay.com/photo/2017/01/10/23/01/icon-1970474_960_720.png" style="width:20px; height:20px; cursor:pointer;margin-top:-2%;" onclick="personal_btn()"></h4>
+                    <tr>
+                        <th style="width:60px;">이름</th>
+                        <th style="width:110px;">제목</th>
+                        <th style="width:350px;">내용</th>
+                    </tr>
+                    </thead>
+                    <tbody class="text-dark">
+                    {% for personalgoal in personalgoal_list %}
+                    <tr>
+                        <td>{{personalgoal.person}}</td>
+                        <td>{{personalgoal.title}}</td>
+                        <td>{{personalgoal.context}}</td>
+                        <td>{{personalgoal.departmentgoal}}</td>
+                        <td><img src="https://cdn.pixabay.com/photo/2013/07/12/12/40/abort-146096_960_720.png" alt="" onclick="location.href='/delete/person/{{ personalgoal.pk }}/'" style="width:20px; height:20px; margin-left:-10px; cursor:pointer;"></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div id="personal" style="display:none;">
+                    <form method="post" style="max-width: 1500px; margin: 2rem auto;">
+                        {% csrf_token %}
+                        <table class="post" >
+                            <tbody class="text-dark">
+                            <tr>
+                                <td style="display: flex">{% bootstrap_form personalgoalForm %}</td>
+                                <td><input type="submit" class="btn btn-primary rounded-pill mt-3" value="POST" name="attr_name3"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+
+            <!--분류-->
+            <div class="sidebar_classify">
+            <table class="classify">
+                <tbody>
+                <h4 style="text-align:center; color:#c5eff7; margin-top:2%; cursor:pointer;">분류&nbsp;<img class="plus" src="https://cdn.pixabay.com/photo/2017/01/10/23/01/icon-1970474_960_720.png" style="width:20px; height:20px; cursor:pointer; margin-top:-2%;" onclick="classify_btn()"></h4>
+                <tr>
+                    <td id='classify' style="font-size:1.2em; display:none;" >
+                    <div class="content_box" style="text-align: center;">
+                        <table class="classify" style="text-align: center; width:90%">
+                            <tbody class="text-dark">
+                            {% for classification in classification_list %}
+                            <tr>
+                                <td>{{classification.num}}.</td>
+                                <td>{{classification.title}}</td>
+                                <td><img src="https://cdn.pixabay.com/photo/2013/07/12/12/40/abort-146096_960_720.png" alt="" onclick="location.href='/delete/classification/{{ classification.pk }}/'" style="width:20px; height:20px; cursor:pointer;"></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    <form method="post" style="max-width: 1500px; margin: 2rem auto;">
+                        {% csrf_token %}
+                        <table class="post" >
+                            <tbody class="text-dark">
+                            <tr>
+                                <td style="display: flex">{% bootstrap_form classificationForm %}</td>
+                                <td><input type="submit" class="btn btn-primary rounded-pill mt-3" value="POST" name="attr_name5"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </td>
+            </tr>
+        </tbody>
+        </table>
+        </div>
+
+            <div class="account">
+                <ul style="text-align: center; margin-top: 3%;">
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'accountsapp:logout'%}" style="color:white;">로그아웃</a></li>
+                {% else %}
+                <li><a href="{% url 'accountsapp:login'%}" style="color:white;">로그인</a></li>
+                <li><a href="{% url 'accountsapp:singup' %}"><span>회원가입</span></a></li>
+                {% endif %}
+                <li><a href="{% url 'boardapp:timeline'%}" style="color:white;">홈</a></li>
+            </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!--   side 끝  -->
+
+
+
+
+
+<!--ㅡ메인보드-->
+<div class="mainboard" id="mainboard">
+    <img class="menu" src="https://cdn.pixabay.com/photo/2017/11/07/07/06/menu-2925825_960_720.png" onclick="w3_open()" style="margin-bottom:3px; margin-left:5px; cursor:pointer; width:50px; height:50px;">
+    <h2 style="font-family: 'Nanum Gothic', sans-serif; font-size:1.5em; border-left: 5px solid #1f3a93;">&nbsp;{{ department_text }}팀</h2>
+    <h2 style="font-family: 'Nanum Gothic', sans-serif; font-size:1.5em; border-left: 5px solid #db222a;">&nbsp;&nbsp;{{ month_text }}월 OKR</h2>
+    <table style="width:1550px; text-align:center;">
+        <thead>
+        <tr>
+            <th style="background-color:#ff6666; width: 130px;" class="text">담당자</th>
+            <th style="background-color:#ff8080; width: 85px;" class="text">분류</th>
+            <th style="background-color:#ffadad; width: 600px;" class="text">테스크</th>
+            <th style="background-color:#ff9980; width: 850px;" class="text">세부테스크</th>
+            <th style="background-color:#ffd6a5; width: 75px;" class="text">예상</th>
+            <th style="background-color:#f4f776; width: 330px;" class="text">시작일정</th>
+            <th style="background-color:#fdffb6; width: 330px;" class="text">끝일정</th>
+            <th style="background-color:#caffbf; width: 75px;" class="text">시간</th>
+            <th style="background-color:#c7e6e9; width:250px;" class="text">진행문제점</th>
+            <th style="background-color:#a0c4ff; width: 75px;" class="text">달성</th>
+            <th style="background-color:#bdb2ff; width:200px;" class="text">해결방안</th>
+            <th style="background-color:#ffc6ff; width: 150px;" class="text">팀</th>
+            <th style="background-color:#ecf0f1; width: 50px;" class="text">Lv</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for board in board_list %}
+        <tr>
+            <td data-id="{{board.pk}}" data-type="user">{{board.user}}</td>
+            <td class="editable" data-id="{{board.pk}}" data-type="expect">{{board.num}}</td>
+            <td class="editable" data-id="{{board.pk}}" data-type="expect">{{board.task}}</td>
+            <td class="editable" data-id="{{board.pk}}" data-type="context">{{board.context}}</td>
+            <td class="editable" data-id="{{board.pk}}" data-type="expect">{{board.expect}}</td>
+            <td class="editable2" data-id="{{board.pk}}" data-type="startdate">{{board.startdate}}</td>
+            <td class="editable2" data-id="{{board.pk}}" data-type="enddate">{{board.enddate}}</td>
+            <td class="editable" data-id="{{board.pk}}" data-type="time">{{board.time}}</td>
+            <td class="editable" data-id="{{board.pk}}" data-type="problem">{{board.problem}}</td>
+            <td class="editable" data-id="{{board.pk}}" data-type="result">{{board.result}}</td>
+            <td class="editable" data-id="{{board.pk}}" data-type="solution">{{board.solution}}</td>
+            <td class="editable" data-id="{{board.pk}}" data-type="team">{{board.team}}</td>
+            <td class="editable" data-id="{{board.pk}}" data-type="level">{{board.level}}</td>
+            <td><img src="https://cdn.pixabay.com/photo/2013/07/12/12/40/abort-146096_960_720.png" alt="" onclick="location.href='/{{ board.pk }}/delete/'" style="width:20px; height:20px; cursor:pointer; margin-left:10px;"></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+
+
+    <!-- 페이징처리 시작 -->
+    <div id="paging">
+        <ul class="pagination justify-content-center" style="margin-top: 2rem;">
+            <!-- 이전페이지 -->
+            {% if board_list.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="/test4/?month={{ month_text }}&department={{department_text}}&page={{ board_list.previous_page_number }}">이전</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+            </li>
+            {% endif %}
+            <!-- 페이지리스트 -->
+            {% for page_number in board_list.paginator.page_range %}
+            {% if page_number == board_list.number %}
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="/test4/?month={{ month_text }}&department={{department_text}}&page={{ page_number }}" style="z-index:1;">{{ page_number }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="/test4/?month={{ month_text }}&department={{department_text}}&page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            <!-- 다음페이지 -->
+            {% if board_list.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="/test4/?month={{ month_text }}&department={{department_text}}&page={{ board_list.next_page_number }}">다음</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    <!-- 페이징처리 끝 -->
+
+
+    <!-- mainboard post -->
+    <div class="posting">
+        <form method="post">
+            {% csrf_token %}
+            <table style="text-align:center; max-width:100%;">
+                <tbody class="text-dark">
+                <tr>
+                    <td style="display: flex;font-family: 'Nanum Gothic', sans-serif; font-size:1.3em; max-width:100%" class="col-sm-15">{% bootstrap_form contextForm %}</td>
+                    <td><input style="font-family: 'Nanum Gothic', sans-serif; font-size:1.0em;" type="submit" class="btn btn-primary rounded-pill mt-3 btn-sm" value="POST" name="attr_name"></td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+
+    {% if messages %}
+    <div class="messages" style="text-align:center; max-width:100%;">
+        {% for message in messages %}
+        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+            {{ message.message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
+
+</div>
+
+
+
+
+<script>
+    $( "select[name=month]" ).change(function () {
+        console.log($("select[name=month]" ).val());
+        month = $("select[name=month]" ).val();
+        $('.form').submit();
+    });
+   function classify_btn(){
+      if($('#classify').css('display') == 'none'){
+      $('#classify').show();
+    }else{
+      $('#classify').hide();
+    }
+    }
+    function company_btn(){
+      if($('#company').css('display') == 'none'){
+      $('#company').show();
+    }else{
+      $('#company').hide();
+    }
+    }
+    function team_btn(){
+      if($('#team').css('display') == 'none'){
+      $('#team').show();
+    }else{
+      $('#team').hide();
+    }
+    }
+    function personal_btn(){
+      if($('#personal').css('display') == 'none'){
+      $('#personal').show();
+    }else{
+      $('#personal').hide();
+    }
+    }
+</script>
+<script>
+    $(document).ready(function() {
+        $(document).on("dblclick", ".editable", function() {
+            var value=$(this).text();
+            var input="<input type='text' class='input-data' value='"+value+"' class='form-control'>";
+            $(this).html(input);
+            $(this).removeClass("editable")
+        });
+        $(document).on("blur", ".input-data", function() {
+            var value=$(this).val();
+            var td=$(this).parent("td");
+            $(this).remove();
+            td.html(value);
+            td.addClass("editable")
+            var type=td.data("type")
+            sendToServer(td.data("id"), value, type);
+        });
+        $(document).on("keypress", ".input-data", function(e) {
+            var key=e.which;
+            if(key==13) {
+                var value=$(this).val();
+                var td=$(this).parent("td");
+                $(this).remove();
+                td.html(value);
+                td.addClass("editable");
+                var type=td.data("type")
+                sendToServer(td.data("id"), value, type);
+            }
+        });
+
+        $(document).on("dblclick", ".editable2", function() {
+            var value=$(this).text();
+            var input="<input type='date' class='input-data' value='"+value+"' class='form-control'>";
+            $(this).html(input);
+            $(this).removeClass("editable")
+        });
+
+        function sendToServer(id, value, type) {
+            console.log(id);
+            console.log(value);
+            console.log(type);
+            $.ajax({
+                url:"http://127.0.0.1:8000/savetable",
+                type:"POST",
+                data:{id:id, type:type, value:value},
+            })
+            .done(function(response){
+                console.log(response);
+            })
+            .fail(function(){
+                console.log("Error Occured");
+            });
+        }
+    });
+</script>
+<script>
+function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+}
+$(document).ready(function(){
+  $('.close').click(function(){
+    document.getElementById('mainboard').style.marginLeft = '10%';
+    document.getElementById('paging').style.marginLeft = '-10%';
+    document.getElementById('posting').style.marginLeft = '10%';
+    });
+  $('.menu').click(function(){
+    document.getElementById('mainboard').style.marginLeft = '25%';
+    document.getElementById('paging').style.marginLeft = '';
+    document.getElementById('posting').style.marginLeft = '25%';
+    });
+});
+</script>
+
+<script>
+    $(document).ready(function() {
+    $( "select[name=month]" ).val( "{{ month_text }}" );
+    $('select[name=month]').change(function () {
+        console.log($('select[name=month]').val());
+        month = $('select[name=month]').val();
+        $('.form').submit();
+    });
+});
+$(document).ready(function() {
+    $('button[name=department]').change(function () {
+        console.log($('button[name=department]').val());
+        department = $('button[name=department]').val();
+        $('.forms').attr('action', "/test4/?month={{month_text}}").submit();
+    });
+});
+</script>
+
+<script>
+    console.log('{{ error }}');
+    {% if error %}
+        alert("{{ error }}");
+    {% endif %}
+</script>
+
+{% endblock %}
