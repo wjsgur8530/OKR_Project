@@ -6,7 +6,7 @@ The project was created under a DJango-based framework and was designed to compu
 <h2>Technology<h2>
 <ul>
   <li>Framework: Django 1.11.29, boostrap 3
-  <li>Language: Pyhone 3.7
+  <li>Language: Python 3.7
   <li>Database: SQLite3(dev), MySQL(prod)
   <li>OS: Window10
   <li>IDE: PyCharm community version
